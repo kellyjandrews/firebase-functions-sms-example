@@ -15,9 +15,7 @@ const {
 // Initialize Nexmo with application credentials
 const nexmo = new Nexmo({
   apiKey: api_key,
-  apiSecret: api_secret,
-  applicationId: application_id,
-  privateKey: './private.key'
+  apiSecret: api_secret
 });
 
 exports.inboundSMS = functions.https.onRequest(async (req, res) => {
@@ -29,20 +27,18 @@ exports.inboundSMS = functions.https.onRequest(async (req, res) => {
 exports.sendSMS = functions.database.ref('/msgq/{pushId}')
   .onCreate((message) => {
     const { msisdn, text, to } = message.val();
-
-    nexmo.channel.send(
-      { "type": "sms", "number": msisdn },
-      { "type": "sms", "number": to },
-      {
-        "content": {
-          "type": "text",
-          "text": `You sent the following message: ${text}`
+    // the incoming object - 'msisdn' is the your phone number, and 'to' is the Nexmo number
+    // nexmo.message.sendSms(to, msisdn, text);
+    return nexmo.message.sendSms(to, msisdn, text, (err, res) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if (res.messages[0]['status'] === "0") {
+          console.log("Message sent successfully.");
+        } else {
+          console.log(`Message failed with error: ${responseData.messages[0]['error-text']}`);
         }
-      },
-      (err, data) => {
-        console.error('Error:', err);
-        console.log(data.message_uuid);
       }
-    );
+    })
   });
 
