@@ -5,7 +5,7 @@ const Nexmo = require('nexmo');
 // Initialize Firebase app for database access
 admin.initializeApp();
 
-// get Firebase environment variables
+// get Firebase environment variables for Nexmo
 const {
   api_key,
   api_secret
@@ -17,12 +17,15 @@ const nexmo = new Nexmo({
   apiSecret: api_secret
 });
 
+// This function will serve as the webhook for incoming SMS messages,
+// and will log the message into the Firebase Realtime Database
 exports.inboundSMS = functions.https.onRequest(async (req, res) => {
   await admin.database().ref('/msgq').push(req.body);
   res.send(200);
 });
 
-
+// This function listens for updates to the Firebase Realtime Database
+// and sends a message back to the original sender
 exports.sendSMS = functions.database.ref('/msgq/{pushId}')
   .onCreate((message) => {
     const { msisdn, text, to } = message.val();

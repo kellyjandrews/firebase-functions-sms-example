@@ -1,6 +1,6 @@
 # Nexmo SMS with Firebase Functions
 
-This example sends and receives Nexmo SMS with Firebase Functions.  Inbound SMS messages use a webhook on Firebase to add the message to a Firestore.  Upon creation, a triggered function will echo back the original text to the phone number.
+This example sends and receives Nexmo SMS with Firebase Functions.  Inbound SMS messages use a webhook on Firebase to add the message to the Firebase Realtime Database. Upon creation, a triggered function will echo back the original text to the phone number.
 
 ## Welcome to Nexmo
 
@@ -20,7 +20,7 @@ If you're new to Nexmo, you can [sign up for a Nexmo account](https://dashboard.
 
 1. Setup [Firebase Tools](https://firebase.google.com/docs/cli)
 1. Run `firebase init functions`
-    1. Choose an existing project or create a new one
+    1. Create a new project
     1. Select JavaScript
     1. Add ESLint
     1. Do not overwrite any files
@@ -32,7 +32,7 @@ overview
     1. Go to ⚙️ -> Usage and Billing -> Details & Settings
     1. Update the plan to `Blaze - Pay As You Go`
 1. Run `firebase deploy --only functions`
-    1. Copy the function route - https://us-central1-YOUR-PROJECT-ID.cloudfunctions.net/inboundSMS
+    1. Copy the function route - `https://[LOCATION]-[YOUR-PROJECT-ID].cloudfunctions.net/inboundSMS`
 
 ### Setup Nexmo
 
@@ -40,7 +40,8 @@ overview
 1. Purchase a new phone number using `nexmo number:buy --country_code US`
     1. This will buy an available US phone number.
     1. For more information on SMS Countries and Features - visit https://help.nexmo.com/hc/en-us/articles/115011451687-SMS-Numbers-Features-Overview
-1. Link the function route to the number `nexmo link:sms 15555555555 https://us-central1-YOUR-PROJECT-ID.cloudfunctions.net/inboundSMS`
+1. Link the function route to the number `nexmo link:sms 15555555555 https://[LOCATION]-[YOUR-PROJECT-ID].cloudfunctions.net/inboundSMS`
+1. Add your Nexmo keys to the Firebase environment variables `firebase functions:config:set nexmo.api_key="Your Key" nexmo.api_secret="Your Secret"`
 
 ### Try It Out
 Text anything you want to the purchased number, and it will echo back what you sent in.
