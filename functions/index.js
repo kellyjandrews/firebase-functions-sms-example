@@ -8,8 +8,7 @@ admin.initializeApp();
 // get Firebase environment variables
 const {
   api_key,
-  api_secret,
-  application_id
+  api_secret
 } = functions.config().nexmo;
 
 // Initialize Nexmo with application credentials
