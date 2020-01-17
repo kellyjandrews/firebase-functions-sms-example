@@ -31,7 +31,7 @@ exports.sendSMS = functions.database.ref('/msgq/{pushId}')
     const { msisdn, text, to } = message.val();
     // the incoming object - 'msisdn' is the your phone number, and 'to' is the Nexmo number
     // nexmo.message.sendSms(to, msisdn, text);
-    return nexmo.message.sendSms(to, msisdn, `You sent the following text:${text}`, (err, res) => {
+    return nexmo.message.sendSms(to, msisdn, `You sent the following text: ${text}`, (err, res) => {
       if (err) {
         console.log(err);
       } else {
